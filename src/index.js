@@ -1,6 +1,8 @@
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
+import 'react-intl/dist/react-intl.min.js';
+import {IntlProvider} from 'react-intl';
 
 import { createElement } from 'react';
 import React from 'react';
@@ -37,7 +39,11 @@ ReactDOM.render(
   createElement(
     Provider,
     { store: store },
-    createElement(App),
+    createElement(
+    	IntlProvider,
+    	{ locale:"en" },
+    	createElement(App)
+    	),
   ),
   document.getElementById('root')
 );

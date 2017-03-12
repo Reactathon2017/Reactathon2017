@@ -15,7 +15,8 @@ const types = {
 const initialState = {
 	reservationId: 0,
 	amount: '',
-	totalBalance: 0,
+	originalBalance: 0,
+	remainingBalance: 0,
 	payments: []
 };
 
@@ -117,7 +118,8 @@ export default (state = initialState, action) => {
 	if (action.type === types.UPDATE_BALANCE) {
 		return {
 			...state,
-			totalBalance: state.totalBalance + action.payload || state.totalBalance
+			originalBalance: action.payload || state.originalBalance,
+			remainingBalance: state.remainingBalance + action.payload
 		};
 	}
 	if (action.type === types.ADD_PAYMENT_OK) {
@@ -134,7 +136,7 @@ export default (state = initialState, action) => {
 		// });
 		// newState.totalBalance = state.totalBalance - payed.amount;
 		newState.amount = '';
-		newState.totalBalance = state.totalBalance - action.payload.amount;
+		newState.remainingBalance = state.remainingBalance - action.payload.amount;
 		return newState;
 	}
   /*if (action.type === types.UPDATE_PRODUCTS) {
