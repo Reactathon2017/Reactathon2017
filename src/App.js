@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import BillDetails from './BillDetails.js'
 
 import Form from './components/Form';
 
@@ -14,6 +15,7 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
         <Form />
+        <BillDetails />
       </div>
     );
   }
