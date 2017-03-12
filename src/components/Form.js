@@ -108,8 +108,8 @@ export default class FormInput extends Component {
 
 	}
 
-	onButtonSelect = (event) => {
-		console.log('event =', this.state);
+	onButtonSelect = () => {
+		console.log('select state', this.state);
 	}
 
 	render() {
@@ -174,8 +174,9 @@ export default class FormInput extends Component {
   				<div>
   					{this.onPaymentChoice()}
 				</div>
+				<br></br>
 				<div>
-					<Button bsStyle="primary"
+					<Button	bsStyle="primary"
 							onSelect={ this.onButtonSelect }
 					>Submit</Button>
 				</div>	
