@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { 
 	Button,
 	Col, 
@@ -7,10 +8,28 @@ import {
 	FormControl,
 	FormGroup,
 	MenuItem,
+	PageHeader,
 	SplitButton 
 } from 'react-bootstrap';
+import { Link } from 'react-router';
+import '../App.css';
+import { setPayment } from '../redux.js';
 
-export default class FormInput extends Component {
+function mapStateToProps(state) {
+  return {
+ 	paymentChoice: state.paymentChoice
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return { 
+    setPayment: (payment) => {
+      return dispatch(setPayment(payment));
+    }
+  };
+};
+
+export class FormInput extends Component {
 
 	constructor(props) {
 		super(props);
@@ -19,8 +38,8 @@ export default class FormInput extends Component {
 			firstName: '',
 			lastName: '',
 			phone: '',
-			email: '',
-			paymentChoice: ''
+			email: ''
+			//paymentChoice: ''
 		}
 	}
 
@@ -45,21 +64,22 @@ export default class FormInput extends Component {
 	}
 
 	onPaymentSelect = (eventKey, event) => {
-		this.setState({ paymentChoice: eventKey});
+		//this.setState({ paymentChoice: eventKey});
+		this.props.setPayment(eventKey);
 	}
 
 	onPaymentChoice = () => {
 
 		let title;
 		
-		if(this.state.paymentChoice === ''){
+		if(this.props.paymentChoice === ''){
 
 			title = 'Payment Options';
 
 			return (
 					<SplitButton title={ title }
 	  							 pullRight id="split-button-pull-right"
-					 			 value={ this.state.paymentChoice }
+					 			 value={ this.props.paymentChoice }
 					 			 onSelect={ this.onPaymentSelect }>
 						<MenuItem eventKey="1">Individual (Dutch)</MenuItem>
 						<MenuItem eventKey="2">You're On The Hook (100%)</MenuItem>
@@ -71,7 +91,7 @@ export default class FormInput extends Component {
 
 			// console.log('this.state.paymentChoice = ', this.state.paymentChoice);
 
-			switch(this.state.paymentChoice){
+			switch(this.props.paymentChoice){
 
 				case '1':
 					title = 'Individual (Dutch)';
@@ -96,7 +116,7 @@ export default class FormInput extends Component {
 			return (
 					<SplitButton title={ title }
 	  							 pullRight id="split-button-pull-right"
-					 			 value={ this.state.paymentChoice }
+					 			 value={ this.props.paymentChoice }
 					 			 onSelect={ this.onPaymentSelect }>
 						<MenuItem eventKey="1">Individual (Dutch)</MenuItem>
 						<MenuItem eventKey="2">You're On The Hook (100%)</MenuItem>
@@ -109,14 +129,16 @@ export default class FormInput extends Component {
 	}
 
 	onButtonSelect = () => {
-		console.log('select state', this.state);
+		//console.log('select state', this.state);
+		//
+
 	}
 
 	render() {
 
 		return (
 			<div>
-				<h3>Dinner Details</h3>
+				<PageHeader>Dinner Details</PageHeader>
 				<Form horizontal>
 					<FormGroup>
 						<Col componentClass={ControlLabel} sm={2}>
@@ -176,11 +198,21 @@ export default class FormInput extends Component {
 				</div>
 				<br></br>
 				<div>
-					<Button	bsStyle="primary"
+					{/*<Button	bsStyle="primary"
 							onSelect={ this.onButtonSelect }
-					>Submit</Button>
+					>Submit</Button>*/}
+					<Button	bsStyle="primary">
+						<Link className="submit-link" to='/billdetails'>
+							Submit
+	            		</Link>
+            		</Button>
 				</div>	
 			</div>
 		)
 	}
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FormInput);

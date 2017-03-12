@@ -19,6 +19,30 @@
   margin-right: auto;
 }
 
+.payment-choice {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.alert-payment {
+  color: white;
+  margin-top: 40px;
+  background-color: #cc8329;
+  font-size: 18px;
+  font-weight: 600;
+  height: 50px;
+  padding: 13px;
+  margin-bottom: 15px;
+}
+
+a.is-active {
+  color: #d0e637;
+}
+
+a.submit-link{
+  color: white;
+}
+
 .App-intro {
   font-size: large;
 }

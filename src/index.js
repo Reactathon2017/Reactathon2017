@@ -2,7 +2,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import 'react-intl/dist/react-intl.min.js';
-import {IntlProvider} from 'react-intl';
+
 
 import { createElement } from 'react';
 import React from 'react';
@@ -14,8 +14,13 @@ import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import reducer from './redux.js';
+import { render } from 'react-dom';
+import { Router, browserHistory as history } from 'react-router';
+
+import {IntlProvider} from 'react-intl';
 
 import './index.css';
+import routes from './routes.jsx';
 
 const devToolStoreEnhancer =
   window.__REDUX_DEVTOOLS_EXTENSION__ &&
@@ -37,13 +42,13 @@ const store = createStore(
 ReactDOM.render(
   //<App />,
   createElement(
-    Provider,
-    { store: store },
-    createElement(
-    	IntlProvider,
-    	{ locale:"en" },
-    	createElement(App)
-    	),
+      IntlProvider,
+      { locale:"en" },
+      createElement(
+      	Provider,
+    	{ store: store },
+    	createElement(Router, { routes, history })
+    	)
   ),
   document.getElementById('root')
 );

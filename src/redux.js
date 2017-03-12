@@ -9,7 +9,9 @@ const types = {
 	ADD_PAYMENT: 'ADD_PAYMENT',
 	ADD_PAYMENT_OK: 'ADD_PAYMENT_OK',
 	ADD_PAYMENT_ERROR: 'ADD_PAYMENT_ERROR',
-	PAYMENT_ADDED: 'PAYMENT_ADDED'
+	PAYMENT_ADDED: 'PAYMENT_ADDED',
+	TRIGGER_MODAL: 'TRIGGER_MODAL',
+	SET_PAYMENT: 'SET_PAYMENT'
 };
 
 const initialState = {
@@ -17,7 +19,23 @@ const initialState = {
 	amount: '',
 	originalBalance: 0,
 	remainingBalance: 0,
-	payments: []
+	payments: [],
+	showModal: false,
+	paymentChoice: ''
+};
+
+export const triggerModal = (show) => {
+  return {
+    type: types.TRIGGER_MODAL,
+    payload: show
+  };
+};
+
+export const setPayment = (payment) => {
+  return {
+    type: types.SET_PAYMENT,
+    payload: payment
+  };
 };
 
 export const updateAmount = (amount) => {
@@ -103,6 +121,18 @@ export const getPaymentAddedAction = (payment) => {
 
 //REDUCER FUNCTION
 export default (state = initialState, action) => {
+	if(action.type === types.TRIGGER_MODAL) {
+		return {
+			...state,
+			showModal: action.payload
+		};
+	}
+	if(action.type === types.SET_PAYMENT) {
+		return {
+			...state,
+			paymentChoice: action.payload
+		}
+	}
 	if(action.type === types.SET_RESERVATION_ID) {
 		return {
 			...state,
@@ -123,52 +153,15 @@ export default (state = initialState, action) => {
 		};
 	}
 	if (action.type === types.ADD_PAYMENT_OK) {
-		// const newState = Object.assign({}, state);
-		// newState.payments = [ ...state.payments, action.payload ];
-		// return newState;
+
 	}
 	if (action.type === types.PAYMENT_ADDED) {
 
 		const newState = Object.assign({}, state);
 		newState.payments = [ ...state.payments, action.payload ];
-		// const payed = newState.payments.reduce((acc, curr) => {
-		// 	return { amount: parseInt(acc.amount) + parseInt(curr.amount)};
-		// });
-		// newState.totalBalance = state.totalBalance - payed.amount;
 		newState.amount = '';
 		newState.remainingBalance = state.remainingBalance - action.payload.amount;
 		return newState;
 	}
-  /*if (action.type === types.UPDATE_PRODUCTS) {
-    return {
-      ...state,
-      products: action.payload
-    };
-  }
-  if (action.type === types.UPDATE_USER) {
-    const user = action.payload;
-    return {
-      ...state,
-      user,
-      cart: user.cart || [],
-      favs: user.favs || [],
-      token: user.accessToken,
-      isSignedIn: !!user.username
-    };
-  }
-
-  if (action.type === types.UPDATE_CART) {
-    return {
-      ...state,
-      cart: action.payload || []
-    };
-  }
-
-  if (action.type === types.UPDATE_FAV) {
-    return {
-      ...state,
-      favs: action.payload || []
-    };
-}*/
-return state;
+	return state;
 };
