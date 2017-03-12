@@ -1,6 +1,7 @@
 import database from './database';
 
 const types = {
+	UPDATE_AMOUNT: 'UPDATE_AMOUNT',
 	SET_RESERVATION_ID: 'SET_RESERVATION_ID',
 	FETCH_BALANCE: 'FETCH_BALANCE',
 	UPDATE_BALANCE: 'UPDATE_BALANCE',
@@ -13,8 +14,16 @@ const types = {
 
 const initialState = {
 	reservationId: 0,
+	amount: '',
 	totalBalance: 0,
 	payments: []
+};
+
+export const updateAmount = (amount) => {
+  return {
+    type: types.UPDATE_AMOUNT,
+    payload: amount
+  };
 };
 
 export const fetchBalance = (id) => {
@@ -49,22 +58,24 @@ const namesPool = ['Drake', 'Ariana', 'Lorraine', 'Diana', 'Joseph', 'Diego', 'A
 
 export const addPayment = (amount) => {
 	return (dispatch, getState) => {
-		dispatch({ type: types.ADD_PAYMENT });
-		const name = namesPool[Math.floor(Math.random()*namesPool.length)];
-		const timestamp = new Date().getUTCMilliseconds();
-		const reservationsRef = database.ref('/reservations/' + getState().reservationId);
-		const newPayment = { 
-			id: timestamp,
-			name: name,
-			amount: amount
-		};
-		reservationsRef.push(newPayment)
-		.then(() => {
-			dispatch({ type: types.ADD_PAYMENT_OK, payload: newPayment });
-		})
-		.catch((error) => {
-			dispatch({ type: types.ADD_PAYMENT_ERROR });
-		});
+		if(amount.length > 0) {
+			dispatch({ type: types.ADD_PAYMENT });
+			const name = namesPool[Math.floor(Math.random()*namesPool.length)];
+			const timestamp = new Date().getUTCMilliseconds();
+			const reservationsRef = database.ref('/reservations/' + getState().reservationId);
+			const newPayment = { 
+				id: timestamp,
+				name: name,
+				amount: amount
+			};
+			reservationsRef.push(newPayment)
+			.then(() => {
+				dispatch({ type: types.ADD_PAYMENT_OK, payload: newPayment });
+			})
+			.catch((error) => {
+				dispatch({ type: types.ADD_PAYMENT_ERROR });
+			});
+		}
 	}
 }
 
@@ -89,13 +100,19 @@ export const getPaymentAddedAction = (payment) => {
 	};
 }
 
-//REDUCER
+//REDUCER FUNCTION
 export default (state = initialState, action) => {
 	if(action.type === types.SET_RESERVATION_ID) {
 		return {
 			...state,
 			reservationId: action.payload
 		}
+	}
+	if (action.type === types.UPDATE_AMOUNT) {
+		return {
+			...state,
+			amount: action.payload || ''
+		};
 	}
 	if (action.type === types.UPDATE_BALANCE) {
 		return {
@@ -116,6 +133,7 @@ export default (state = initialState, action) => {
 		// 	return { amount: parseInt(acc.amount) + parseInt(curr.amount)};
 		// });
 		// newState.totalBalance = state.totalBalance - payed.amount;
+		newState.amount = '';
 		newState.totalBalance = state.totalBalance - action.payload.amount;
 		return newState;
 	}

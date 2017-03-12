@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {ListGroup, ListGroupItem, Button, Form, FormGroup, FormControl, InputGroup, Modal} from 'react-bootstrap'
-import { updateBalance, addPayment } from './redux.js';
+import { updateBalance, addPayment, updateAmount } from './redux.js';
 
 function mapStateToProps(state) {
   return {
     totalBalance: state.totalBalance,
-    payments: state.payments
+    payments: state.payments,
+    amount: state.amount
   };
 }
 
@@ -17,7 +18,12 @@ const mapDispatchToProps = dispatch => {
       const { value } = e.target;
       return dispatch(updateBalance(value));
     }, 
-    addPayment: (amount) => dispatch(addPayment(amount))
+    addPayment: (amount) => dispatch(addPayment(amount)),
+    updateAmount: (e) => {
+      const { value } = e.target;
+      console.log('amount value: ', value);
+      return dispatch(updateAmount(value));
+    },
   };
 };
 
@@ -25,8 +31,7 @@ const mapDispatchToProps = dispatch => {
 export class BillDetails extends Component{
   constructor(){
   	super();
-  	this.state = {showModal: false,
-  				  amount: ''
+  	this.state = {showModal: false
   				};
 
   }
@@ -36,7 +41,7 @@ export class BillDetails extends Component{
   confirm = () =>{
   	// let arr = [ ...this.state.participants, this.state.amount];
   	// this.setState({ showModal: false, participants: arr, amount:'' });
-    this.props.addPayment(this.state.amount);
+    this.props.addPayment(this.props.amount);
     this.setState({ showModal: false, amount:'' })
   }
    
@@ -48,10 +53,10 @@ export class BillDetails extends Component{
    	this.setState({ showModal: true });   	 
   }
 
-  handleAmountChange =(event) =>{
-  	event.preventDefault();
-  	this.setState({ amount: event.target.value });
-  }
+  // handleAmountChange =(event) =>{
+  // 	event.preventDefault();
+  // 	this.setState({ amount: event.target.value });
+  // }
  
 
 
@@ -67,7 +72,7 @@ export class BillDetails extends Component{
             	<FormGroup>
       				<InputGroup>
         				<InputGroup.Addon>$</InputGroup.Addon>
-        				<FormControl type="text" value={this.state.amount} onChange={ this.handleAmountChange }/>        				
+        				<FormControl type="text" value={this.props.amount} onChange={ this.props.updateAmount }/>        				
       				</InputGroup>
     		 	</FormGroup>
   				<Button bsStyle="primary"  onClick={this.open}>Pay</Button>
