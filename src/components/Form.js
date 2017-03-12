@@ -18,29 +18,99 @@ export default class FormInput extends Component {
 		this.state = {
 			firstName: '',
 			lastName: '',
-			email: '',
 			phone: '',
+			email: '',
 			paymentChoice: ''
 		}
 	}
 
 	onFirstNameChange = (event) => {
-		console.log('event = ', event)
 		event.preventDefault();
-		this.setState({ firstName: event.target.value })
+		this.setState({ firstName: event.target.value });
 	}
 
-	onButtonSelect = (event) => {
-		console.log('event =', event);
-		console.log('this.state =', this.state);
+	onLastNameChange = (event) => {
+		event.preventDefault();
+		this.setState({ lastName: event.target.value });
 	}
 
-	onPaymentChoice = (event) => {
-		console.log('event =', event.target.value);
-		this.setState({ paymentChoice: event.target.value});
+	onPhoneChange = (event) => {
+		event.preventDefault();
+		this.setState({ phone: event.target.value });
+	}
+
+	onEmailChange = (event) => {
+		event.preventDefault();
+		this.setState({ email: event.target.value });
+	}
+
+	onPaymentSelect = (eventKey, event) => {
+		this.setState({ paymentChoice: eventKey});
+	}
+
+	onPaymentChoice = () => {
+
+		let title;
+		
+		if(this.state.paymentChoice === ''){
+
+			title = 'Payment Options';
+
+			return (
+					<SplitButton title={ title }
+	  							 pullRight id="split-button-pull-right"
+					 			 value={ this.state.paymentChoice }
+					 			 onSelect={ this.onPaymentSelect }>
+						<MenuItem eventKey="1">Individual (Dutch)</MenuItem>
+						<MenuItem eventKey="2">You're On The Hook (100%)</MenuItem>
+						<MenuItem eventKey="3">Even Split</MenuItem>
+						<MenuItem eventKey="4">Split Appetizers Only</MenuItem>
+					</SplitButton>
+			);
+		} else {
+
+			// console.log('this.state.paymentChoice = ', this.state.paymentChoice);
+
+			switch(this.state.paymentChoice){
+
+				case '1':
+					title = 'Individual (Dutch)';
+					break;
+
+				case '2':
+					title = 'You\'re On The Hook (100%)';
+					break;
+
+				case '3':
+					title = 'Even Split';
+					break;
+
+				case '4':
+					title = 'Split Appetizers Only';
+					break;
+
+				default:
+					title = 'Default';
+			}
+
+			return (
+					<SplitButton title={ title }
+	  							 pullRight id="split-button-pull-right"
+					 			 value={ this.state.paymentChoice }
+					 			 onSelect={ this.onPaymentSelect }>
+						<MenuItem eventKey="1">Individual (Dutch)</MenuItem>
+						<MenuItem eventKey="2">You're On The Hook (100%)</MenuItem>
+						<MenuItem eventKey="3">Even Split</MenuItem>
+						<MenuItem eventKey="4">Split Appetizers Only</MenuItem>
+					</SplitButton>
+			)
+		}
 
 	}
 
+	onButtonSelect = () => {
+		console.log('select state', this.state);
+	}
 
 	render() {
 
@@ -66,7 +136,12 @@ export default class FormInput extends Component {
 						  Last Name
 					  	</Col>
 			  			<Col sm={10}>
-			  				<FormControl type="text" placeholder="Last Name" />
+			  				<FormControl 
+			  					type="text" 
+			  					placeholder="Last Name"
+			  					value={this.state.lastName}
+			  					onChange={this.onLastNameChange}
+		  					/>
 		  				</Col>
 	  				</FormGroup>
 	  				<FormGroup controlId="formgroup">
@@ -74,7 +149,12 @@ export default class FormInput extends Component {
 						  Phone
 					  	</Col>
 			  			<Col sm={10}>
-			  				<FormControl type="text" placeholder="Phone" />
+			  				<FormControl 
+			  					type="number" 
+			  					placeholder="Phone"
+			  					value={this.state.phone}
+			  					onChange={this.onPhoneChange}
+		  					/>
 		  				</Col>
 	  				</FormGroup>
   					<FormGroup controlId="formgroup">
@@ -82,23 +162,21 @@ export default class FormInput extends Component {
 						  Email
 					  	</Col>
 			  			<Col sm={10}>
-			  				<FormControl type="email" placeholder="Email" />
+			  				<FormControl 
+			  					type="email" 
+			  					placeholder="Email"
+			  					value={this.state.email}
+			  					onChange={this.onEmailChange}
+		  					/>
 		  				</Col>
 	  				</FormGroup>
   				</Form>
   				<div>
-	  				<SplitButton title="Payment Options" 
-	  							 pullRight id="split-button-pull-right"
-					 			 value={ this.state.paymentChoice }
-					 			 onChange={ this.onPaymentChoice }>
-						<MenuItem eventKey="1">Individual (Dutch)</MenuItem>
-						<MenuItem eventKey="2">You're On The Hook (100%)</MenuItem>
-						<MenuItem eventKey="3">Split Evenly</MenuItem>
-						<MenuItem eventKey="4">Split Appetizers Only</MenuItem>
-					</SplitButton>
+  					{this.onPaymentChoice()}
 				</div>
+				<br></br>
 				<div>
-					<Button bsStyle="primary"
+					<Button	bsStyle="primary"
 							onSelect={ this.onButtonSelect }
 					>Submit</Button>
 				</div>	
