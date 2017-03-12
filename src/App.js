@@ -37,8 +37,8 @@ export class App extends Component {
   }
   render() {
     const bio = {
-      avatar_url: 'https://resizer.otstatic.com/v1/fDzI465IL8%2B687zSupRS4Q/24900953.jpg', 
-      name: 'Ohio'
+      avatar_url: 'https://resizer.otstatic.com/v1/fDzI465IL8%2B687zSupRS4Q/24442945.jpg', 
+      name: "Trattoria Trombino's"
     };
     return (
       <div className="App">

@@ -5,6 +5,15 @@ import { ListGroup, ListGroupItem, Button, Form, FormGroup,
           FormControl, InputGroup, Modal, PageHeader, Grid, Row, Col
        } from 'react-bootstrap'
 import { updateBalance, addPayment, updateAmount, triggerModal } from './redux.js';
+import NoPayments from './components/NoPayments.js';
+import './App.css';
+
+const paymentOptions = {
+  '1': 'Individual (Dutch)', 
+  '2': "You're On The Hook (100%)", 
+  '3': 'Even Split',
+  '4': 'Split Appetizers Only'
+};
 
 function mapStateToProps(state) {
   return {
@@ -12,7 +21,8 @@ function mapStateToProps(state) {
     remainingBalance: state.remainingBalance,
     payments: state.payments,
     amount: state.amount,
-    showModal: state.showModal
+    showModal: state.showModal,
+    paymentChoice: state.paymentChoice
   };
 }
 
@@ -57,14 +67,21 @@ export class BillDetails extends Component{
   }
 
   render(){
+    const paymentChoice = this.props.paymentChoice;
   	return (  		
   		<div>
   			<PageHeader>Bill Details</PageHeader>            
           <Grid>
+                <Row > 
+                  <Col md={6} mdOffset={3}>
+                    <label className="payment-choice">Your payment choice was: {paymentOptions[paymentChoice]} </label>
+                  </Col>
+                </Row>
                 <Row>
                   <Col md={6} mdOffset={3}>
                       <Col sm={6}>
-                       <label>Total Bill: </label>
+                        
+                        <label>Total Bill: </label>
                       </Col>
                       <Col sm={6}>
                         <label>Remaining Balance: </label>
@@ -118,11 +135,16 @@ export class BillDetails extends Component{
 
                       <label>Payments Made: </label>
 
-                      <ListGroup>
-                       {this.props.payments.map(p => <ListGroupItem key={p.id}>
-                          {p.name} - <FormattedNumber value={p.amount} style="currency" currency="USD" />
-                          </ListGroupItem>)}
-                      </ListGroup>  
+                      { this.props.payments.length > 0 
+                        ? 
+                          <ListGroup>
+                           {this.props.payments.map(p => <ListGroupItem key={p.id}>
+                              {p.name} - <FormattedNumber value={p.amount} style="currency" currency="USD" />
+                              </ListGroupItem>)}
+                          </ListGroup>  
+                        :
+                          <NoPayments />
+                      }
 
                       <Modal show={this.props.showModal} onHide={this.close} bsSize="small" aria-labelledby="contained-modal-title-sm">
                         <Modal.Body>
@@ -134,6 +156,11 @@ export class BillDetails extends Component{
                         </Modal.Footer>
                       </Modal>
                   </Col>
+                </Row>
+                <Row>
+                  <Button bsStyle='primary'>
+                    Share
+                  </Button>
                 </Row>
             </Grid>
   		</div>
