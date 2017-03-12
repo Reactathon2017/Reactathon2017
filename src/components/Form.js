@@ -7,6 +7,7 @@ import {
 	FormControl,
 	FormGroup,
 	MenuItem,
+	PageHeader,
 	SplitButton 
 } from 'react-bootstrap';
 
@@ -116,7 +117,7 @@ export default class FormInput extends Component {
 
 		return (
 			<div>
-				<h3>Dinner Details</h3>
+				<PageHeader>Dinner Details</PageHeader>
 				<Form horizontal>
 					<FormGroup>
 						<Col componentClass={ControlLabel} sm={2}>
