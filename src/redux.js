@@ -9,7 +9,8 @@ const types = {
 	ADD_PAYMENT: 'ADD_PAYMENT',
 	ADD_PAYMENT_OK: 'ADD_PAYMENT_OK',
 	ADD_PAYMENT_ERROR: 'ADD_PAYMENT_ERROR',
-	PAYMENT_ADDED: 'PAYMENT_ADDED'
+	PAYMENT_ADDED: 'PAYMENT_ADDED',
+	TRIGGER_MODAL: 'TRIGGER_MODAL'
 };
 
 const initialState = {
@@ -17,7 +18,15 @@ const initialState = {
 	amount: '',
 	originalBalance: 0,
 	remainingBalance: 0,
-	payments: []
+	payments: [],
+	showModal: false
+};
+
+export const triggerModal = (show) => {
+  return {
+    type: types.TRIGGER_MODAL,
+    payload: show
+  };
 };
 
 export const updateAmount = (amount) => {
@@ -103,6 +112,12 @@ export const getPaymentAddedAction = (payment) => {
 
 //REDUCER FUNCTION
 export default (state = initialState, action) => {
+	if(action.type === types.TRIGGER_MODAL) {
+		return {
+			...state,
+			showModal: action.payload
+		};
+	}
 	if(action.type === types.SET_RESERVATION_ID) {
 		return {
 			...state,

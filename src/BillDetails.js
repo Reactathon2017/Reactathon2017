@@ -4,20 +4,20 @@ import { FormattedNumber } from 'react-intl'
 import { ListGroup, ListGroupItem, Button, Form, FormGroup, 
           FormControl, InputGroup, Modal, PageHeader, Grid, Row, Col
        } from 'react-bootstrap'
-import { updateBalance, addPayment, updateAmount } from './redux.js';
+import { updateBalance, addPayment, updateAmount, triggerModal } from './redux.js';
 
 function mapStateToProps(state) {
   return {
     originalBalance: state.originalBalance,
     remainingBalance: state.remainingBalance,
     payments: state.payments,
-    amount: state.amount
+    amount: state.amount,
+    showModal: state.showModal
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    //watchPaymentAddedEvent: () => dispatch(watchPaymentAddedEvent()),
     updateBalance: (e) => {
       const { value } = e.target;
       return dispatch(updateBalance(value));
@@ -28,6 +28,7 @@ const mapDispatchToProps = dispatch => {
       console.log('amount value: ', value);
       return dispatch(updateAmount(value));
     },
+    triggerModal: (showModal) => dispatch(triggerModal(showModal))
   };
 };
 
@@ -43,75 +44,66 @@ export class BillDetails extends Component{
       
   };
   confirm = () =>{
-  	// let arr = [ ...this.state.participants, this.state.amount];
-  	// this.setState({ showModal: false, participants: arr, amount:'' });
     this.props.addPayment(this.props.amount);
-    this.setState({ showModal: false, amount:'' })
+    this.props.triggerModal(false);
   }
    
   close =() => {
-    this.setState({ showModal: false, amount:'' })
+    this.props.triggerModal(false);
   }
 
   open =() => {  	
-   	this.setState({ showModal: true });   	 
+    this.props.triggerModal(true);  	 
   }
-
-  // handleAmountChange =(event) =>{
-  // 	event.preventDefault();
-  // 	this.setState({ amount: event.target.value });
-  // }
- 
-
 
   render(){
   	return (  		
   		<div>
   			<PageHeader>Bill Details</PageHeader>            
-              <Grid>
-                  <Row>
-                      <Col mdOffset={3} md={6}>
-                        <Col sm={3}>
-                  			 <label>Total Bill: </label>
-                          <label>  <FormattedNumber value={this.props.originalBalance} style="currency" currency="USD" /> 
-                          </label>
-                  			</Col>
-                        <Col sm={3}>
-                          <label> Remaining Balance: </label>
-                          <label>
-                            <FormattedNumber value={this.props.remainingBalance} style="currency" currency="USD" />  
-                          </label>
-                        </Col>
+        <Grid>
+          <Row>
+              <Col mdOffset={3} md={6}>
+                <Col sm={3}>
+          			 <label>Total Bill: </label>
+                  <label>  <FormattedNumber value={this.props.originalBalance} style="currency" currency="USD" /> 
+                  </label>
+          			</Col>
+                <Col sm={3}>
+                  <label> Remaining Balance: </label>
+                  <label>
+                    <FormattedNumber value={this.props.remainingBalance} style="currency" currency="USD" />  
+                  </label>
+                </Col>
 
-                  				<InputGroup>
-                    				<InputGroup.Addon>$</InputGroup.Addon>
-                    				<FormControl type="text" value={this.props.amount} onChange={ this.props.updateAmount }/>   
+          				<InputGroup>
+            				<InputGroup.Addon>$</InputGroup.Addon>
+            				<FormControl type="text" value={this.props.amount} onChange={ this.props.updateAmount }/>   
 
-                            <InputGroup.Button>
-                              <Button bsStyle="primary"  onClick={this.open}>Pay</Button>
-                            </InputGroup.Button>     				
-                  				</InputGroup>
-                    		 	<br/>
-                          <label>Payments already done: </label>
-                          <ListGroup>
-                           {this.props.payments.map(p => <ListGroupItem key={p.id}>
-                              {p.name} - <FormattedNumber value={p.amount} style="currency" currency="USD" />
-                              </ListGroupItem>)}
-                          </ListGroup>  
+                    <InputGroup.Button>
+                      <Button bsStyle="primary"  onClick={this.open}>Pay</Button>
+                    </InputGroup.Button>     				
+          				</InputGroup>
+            		 	<br/>
+                  <label>Payments already done: </label>
+                  <ListGroup>
+                   {this.props.payments.map(p => <ListGroupItem key={p.id}>
+                      {p.name} - <FormattedNumber value={p.amount} style="currency" currency="USD" />
+                      </ListGroupItem>)}
+                  </ListGroup>  
 
-                      		<Modal show={this.state.showModal} onHide={this.close} bsSize="small" aria-labelledby="contained-modal-title-sm">
-                      			<Modal.Body>
-                          			<h4>Confirm the payment: <FormattedNumber value={this.props.amount} style="currency" currency="USD" /></h4>
-                          	    </Modal.Body>
-                          	    <Modal.Footer>
-                      				<Button bsStyle="primary" onClick={this.confirm}>OK</Button>
-                      				<Button bsStyle="primary" onClick={this.close}>Cancel</Button>
-                    				</Modal.Footer>
-                      		</Modal>
-                			
-                      </Col>
-                    </Row>
-                  </Grid>
+              		<Modal show={this.props.showModal} onHide={this.close} bsSize="small" aria-labelledby="contained-modal-title-sm">
+              			<Modal.Body>
+                  			<h4>Confirm the payment: <FormattedNumber value={this.props.amount} style="currency" currency="USD" /></h4>
+                  	    </Modal.Body>
+                  	    <Modal.Footer>
+              				<Button bsStyle="primary" onClick={this.confirm}>OK</Button>
+              				<Button bsStyle="primary" onClick={this.close}>Cancel</Button>
+            				</Modal.Footer>
+              		</Modal>
+        			
+              </Col>
+            </Row>
+          </Grid>
   		</div>
   	)
   }

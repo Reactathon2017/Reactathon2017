@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import logo from './logo.svg';
 import './App.css';
 import { getQueryStringParams } from './utils.js';
 import BillDetails from './BillDetails.js'
 import RestaurantProfile from './components/RestaurantProfile.js';
-import Form from './components/Form';
+
+import { createElement } from 'react';
 
 import {
   setReservationId,
@@ -45,12 +45,12 @@ export class App extends Component {
         <div className="App-header">
           <RestaurantProfile bio={ bio }/>
         </div>
-        <Form />
-        <BillDetails />
+        {this.props.children}
       </div>
     );
   }
 }
+
 
 export default connect(
   null,

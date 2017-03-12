@@ -10,7 +10,6 @@ const RestaurantProfile = ({bio}) => {
 }
 
 RestaurantProfile.propTypes = {
-  name: React.PropTypes.string.isRequired,
   bio: React.PropTypes.object.isRequired
 }
 
