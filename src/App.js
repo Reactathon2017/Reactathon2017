@@ -4,7 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import { getQueryStringParams } from './utils.js';
 import BillDetails from './BillDetails.js'
-
+import RestaurantProfile from './components/RestaurantProfile.js';
 import Form from './components/Form';
 
 import {
@@ -36,11 +36,14 @@ export class App extends Component {
       this.props.fetchBalance('1');
   }
   render() {
+    const bio = {
+      avatar_url: 'https://resizer.otstatic.com/v1/fDzI465IL8%2B687zSupRS4Q/24900953.jpg', 
+      name: 'Ohio'
+    };
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <RestaurantProfile bio={ bio }/>
         </div>
         <Form />
         <BillDetails />
