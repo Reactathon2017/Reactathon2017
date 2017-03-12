@@ -1,20 +1,43 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import {ListGroup, ListGroupItem, Button, Form, FormGroup, FormControl, InputGroup, Modal} from 'react-bootstrap'
+import { updateBalance, addPayment } from './redux.js';
+
+function mapStateToProps(state) {
+  return {
+    totalBalance: state.totalBalance,
+    payments: state.payments
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    //watchPaymentAddedEvent: () => dispatch(watchPaymentAddedEvent()),
+    updateBalance: (e) => {
+      const { value } = e.target;
+      return dispatch(updateBalance(value));
+    }, 
+    addPayment: (amount) => dispatch(addPayment(amount))
+  };
+};
 
 
-export default class BillDetails extends Component{
+export class BillDetails extends Component{
   constructor(){
   	super();
   	this.state = {showModal: false,
-  				  amount: '',
-  				  participants: []
+  				  amount: ''
   				};
 
   }
-
-  confirm =() =>{
-  	let arr = [ ...this.state.participants, this.state.amount];
-  	this.setState({ showModal: false, participants: arr, amount:'' });
+  componentDidMount() {
+      
+  };
+  confirm = () =>{
+  	// let arr = [ ...this.state.participants, this.state.amount];
+  	// this.setState({ showModal: false, participants: arr, amount:'' });
+    this.props.addPayment(this.state.amount);
+    this.setState({ showModal: false, amount:'' })
   }
    
   close =() => {
@@ -36,9 +59,9 @@ export default class BillDetails extends Component{
   	return (  		
   		<div>
   			<h3>Bill Details</h3>  			
-  			<label>Original Balance   $100</label>
+  			<label>Original Balance {this.props.totalBalance} </label>
   			<ListGroup>
-  				{this.state.participants.map(q => <ListGroupItem key={q}>{q}</ListGroupItem>)}
+  				{this.props.payments.map(p => <ListGroupItem key={p.id}>{p.name} - {p.amount}</ListGroupItem>)}
     		</ListGroup>  			
   			<Form>
             	<FormGroup>
@@ -62,5 +85,9 @@ export default class BillDetails extends Component{
   		</div>
   	)
   }
-
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BillDetails);
